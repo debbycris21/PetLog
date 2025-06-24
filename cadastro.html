@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Pet Shop</title>
+    <style>
+        body {
+          font-family: "Arial", sans-serif;
+          background-color: #f7f3bc;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+        .cad-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          background-color: #f7f3bc;
+        }
+        .cad-box {
+          background-color: #fff;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+          width: 300px;
+          text-align: center;
+        }
+        h2 {
+          font-size: 24px;
+          margin-bottom: 20px;
+          color: #eb780e;
+        }
+        .textbox {
+          margin-bottom: 10px;
+          position: relative;
+        }
+        .textbox input {
+          width: 90%;
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 5px;
+          outline: none;
+          font-size: 16px;
+        }
+        .textbox input:focus {
+          border-color: #ff5722;
+        }
+        .btn {
+          width: 100%;
+          padding: 10px;
+          background-color: #ff5722;
+          border: none;
+          border-radius: 5px;
+          color: #fff;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+        .btn:hover {
+          background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-box">
+            <h2>Cadastro de Cliente</h2>
+            <form id="cadastroForm">
+                <div class="section">
+                    <h3>Informações do Cliente</h3>
+                    <div class="textbox">
+                        <input type="text" placeholder="Nome Completo" name="nome" id="inputNome" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" placeholder="Telefone" name="telefone" id="inputTelefone" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" placeholder="userId" name="userId" id="inputUserId" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+      document.getElementById('cadastroForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const nome = document.getElementById('inputNome').value;
+        const telefone = document.getElementById('inputTelefone').value;
+        const userId = document.getElementById('inputUserId').value;
+
+        try {
+          const response = await fetch("https://eavwixsotj.execute-api.us-east-1.amazonaws.com/v2/clientes", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              name: nome,
+              phone: telefone,
+              userId: userId
+            })
+          });
+
+          if (response.ok) {
+            alert("sucesso ao cadastrar cliente: " + (response.status || response.status));
+          } else {
+            const res = await response.json();
+            alert("Erro ao cadastrar cliente: " + (res.status || response.status));
+          }
+        } catch (error) {
+          alert("Erro ao cadastrar cliente: " + error.message);
+        }
+      });
+    </script>
+</body>
+</html>

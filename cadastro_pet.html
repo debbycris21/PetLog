@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Pet Shop</title>
+    <style>
+        body {
+          font-family: "Arial", sans-serif;
+          background-color: #f7f3bc;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+        .cad-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          background-color: #f7f3bc;
+        }
+        .form-box {
+          background-color: #fff;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+          width: 300px;
+          text-align: center;
+        }
+        h2 {
+          font-size: 24px;
+          margin-bottom: 20px;
+          color: #eb780e;
+        }
+        .textbox {
+          margin-bottom: 10px;
+          position: relative;
+        }
+        .textbox input {
+          width: 90%;
+          padding: 10px;
+          border: 2px solid #ddd;
+          border-radius: 5px;
+          outline: none;
+          font-size: 16px;
+        }
+        .textbox input:focus {
+          border-color: #ff5722;
+        }
+        .btn {
+          width: 100%;
+          padding: 10px;
+          background-color: #ff5722;
+          border: none;
+          border-radius: 5px;
+          color: #fff;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+        .btn:hover {
+          background-color: #e64a19;
+        }
+        .status-msg {
+          margin-top: 15px;
+          font-size: 16px;
+          color: #333;
+        }
+        .status-success {
+          color: green;
+        }
+        .status-error {
+          color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-box">
+            <h2>Cadastro de Pet</h2>
+            <form id="petForm">
+                <div class="section">
+                    <h3>Informações do Pet</h3>
+                    <div class="textbox">
+                        <input type="text" placeholder="Nome" name="nome" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" placeholder="Nascimento" name="idade" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" placeholder="Dono" name="dono" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" placeholder="Conta" name="conta" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Cadastrar</button>
+            </form>
+            <div id="statusMsg" class="status-msg"></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('petForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.textContent = '';
+            statusMsg.className = 'status-msg';
+
+            // Coletando os dados do formulário
+            const nome = e.target.nome.value.trim();
+            const idade = e.target.idade.value.trim();
+            const dono = e.target.dono.value.trim();
+            const conta = e.target.conta.value.trim();
+
+            // Montando o objeto para o backend
+            const payload = {
+                name: nome,
+                birth: idade,
+                owner: dono,
+                userId: conta
+            };
+
+            fetch('https://eavwixsotj.execute-api.us-east-1.amazonaws.com/v2/animais', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(async response => {
+                const data = await response.json().catch(() => ({}));
+                if (response.ok) {
+                    statusMsg.textContent = "Cadastro realizado com sucesso!";
+                    statusMsg.classList.add('status-success');
+                } else {
+                    statusMsg.textContent = data.status || "Erro ao cadastrar o pet.";
+                    statusMsg.classList.add('status-error');
+                }
+            })
+            .catch(error => {
+                statusMsg.textContent = "Erro de conexão. Tente novamente.";
+                statusMsg.classList.add('status-error');
+            });
+        });
+    </script>
+</body>
+</html>
